@@ -1,20 +1,31 @@
 Feature: API testing
 
   @api
-  Scenario: Full circle CRUD test
-    When I register a new user with following details:
+  Scenario Outline: Full circle CRUD test
+    Given I register a new user with following details:
       | username   | email             | password |
-      | testusers1w36sy3 | test1wss331yy@gmail1.com | 123456   |
-    Then I get the register message User "successfully" registered successfully
-    When I login to the API as new user
-    Then I get the login message "User logged in successfully"
-    When I get the list of users
-    Then I get the message Retrieved "number" users
-    When I get the user by id
-    Then I get the retrieved message equal Retrieved user with id "id"
-    When I update the user with the following details:
+      | <username> | <email>           | <password> |
+    Then I should get a successful registration message
+
+    When I login as this user
+    Then I should get a successful login message
+
+    When I list all registered users
+    Then I should get a user count message
+
+    When I retrieve the details of this user by id
+    Then I should get a message with the retrieved user details
+
+    Given I have the following updated user details:
       | username | password | email         |
-      | et2y3      | 123456   | et337@gmail.com |
-    Then I get the update message User "successfully" updated successfully
-    When I delete the user
-    Then I get delete the message User "successfully" deleted successfully
+      | <new_username> | <new_password> | <new_email> |
+    When I update this user using updated details
+    Then I should get a successful update message
+
+    When I delete this user
+    Then I should get a successful user deletion message
+
+    Examples:
+      | username      | email                | password | new_username | new_password | new_email        |
+      | testusers1w3 | test1wss331yy@gmail1.com | 123456   | et2y3       | 123456   | et337@gmail.com |
+      | testusers2x4 | test2xss442zz@gmail2.com | 654321   | nx4y7       | 654321   | nx447@gmail.com |
