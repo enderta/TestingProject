@@ -35,6 +35,7 @@ public class ApiCrudSteps {
     public void i_get_the_register_message_user_registered_successfully(String msg) {
         response.then().assertThat().statusCode(200);
     }
+
     @When("I login to the API as new user")
     public void i_login_to_the_api_as_new_user() {
         Map<String, String> bdy= new HashMap<>();
