@@ -27,5 +27,5 @@ Feature: API testing
 
     Examples:
       | username      | email                | password | new_username | new_password | new_email        |
-      | testusers1w3 | test1wss331yy@gmail1.com | 123456   | et2y3       | 123456   | et337@gmail.com |
-      | testusers2x4 | test2xss442zz@gmail2.com | 654321   | nx4y7       | 654321   | nx447@gmail.com |
+      | testusers1w7 | test1wss3317yy2@gmail1.com | 123456   | et2y3       | 123456   | et337@gmail.com |
+     

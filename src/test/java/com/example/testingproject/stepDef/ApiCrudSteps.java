@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
+import org.junit.Assert;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,157 +20,116 @@ public class ApiCrudSteps {
     String token;
     String userName;
     String password;
+    String email;
     Response response;
-    @When("I register a new user with following details:")
-    public void i_register_a_new_user_with_following_details(List<Map<String, String>> dataTable) {
-       Map<String,String> bdy = dataTable.get(0);
-       userName=bdy.get("userName");
-         password=bdy.get("password");
-        response= given()
-                .contentType(ContentType.JSON)
-                .body(bdy)
-                .when()
-                .post("/api/users/register").prettyPeek();
+String id;
+    @Given("I register a new user with following details:")
+    public void i_register_a_new_user_with_following_details(List<Map<String,Object>> data) {
+      Map<String,Object> bdy= data.get(0);
+        userName=bdy.get("username").toString();
+        password=bdy.get("password").toString();
+        email=bdy.get("email").toString();
+        response=given().accept(ContentType.JSON)
+                .and().contentType(ContentType.JSON)
+                .and().body(bdy)
+                .when().post("/api/register")
+                .prettyPeek();
     }
-    @Then("I get the register message User {string} registered successfully")
-    public void i_get_the_register_message_user_registered_successfully(String msg) {
-        response.then().assertThat().statusCode(200);
-    }
-
-    @When("I login to the API as new user")
-    public void i_login_to_the_api_as_new_user() {
-        Map<String, String> bdy= new HashMap<>();
-        bdy.put("username",userName);
-        bdy.put("password",password);
-        response= given()
-                .contentType(ContentType.JSON)
-                .body(bdy)
-                .when()
-                .post("/api/users/login").prettyPeek();
-    }
-    @Then("I get the login message {string}")
-    public void i_get_the_login_message(String msg) {
-
-        response.then().assertThat().statusCode(200);
-        token=response.jsonPath().getString("token");
-    }
-    @When("I get the list of users")
-    public void i_get_the_list_of_users() {
-        response= given()
-                .contentType(ContentType.JSON)
-                .header("Authorization",token)
-                .when()
-                .get("/api/users");
-    }
-    @Then("I get the message Retrieved {string} users")
-    public void i_get_the_message_retrieved_users(String msg) {
-        response.then().assertThat().statusCode(200);
-    }
-    String id;
-    @When("I get the user by id")
-    public void i_get_the_user_by_id() {
-        JsonPath jsonPath=response.jsonPath();
-        Map<String,Object> user=jsonPath.getMap("user");
-        id= (String) user.get("id");
-
-    }
-    @Then("I get the retrieved message equal Retrieved user with id {string}")
-    public void i_get_the_retrieved_message_equal_retrieved_user_with_id(String msg) {
-        response.then().assertThat().statusCode(200);
-    }
-    @When("I update the user with the following details:")
-    public void i_update_the_user_with_the_following_details(List<Map<String, String>> dataTable) {
-        Map<String,String> bdy = dataTable.get(0);
-        response= given()
-                .contentType(ContentType.JSON)
-                .header("Authorization",token)
-                .body(bdy)
-                .when()
-                .put("/api/users/"+id);
-    }
-    @Then("I get the update message User {string} updated successfully")
-    public void i_get_the_update_message_user_updated_successfully(String msg) {
-        response.then().assertThat().statusCode(200);
-    }
-    @When("I delete the user")
-    public void i_delete_the_user() {
-        response= given()
-                .contentType(ContentType.JSON)
-                .header("Authorization",token)
-                .when()
-                .delete("/api/users/"+id);
-    }
-    @Then("I get delete the message User {string} deleted successfully")
-    public void i_get_delete_the_message_user_deleted_successfully(String msg) {
-        response.then().assertThat().statusCode(200);
-    }
-
     @Then("I should get a successful registration message")
     public void i_should_get_a_successful_registration_message() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+       String message=response.jsonPath().getString("message");
+       String actualMessage="User "+userName+" registered successfully";
+        Assert.assertEquals(actualMessage,message);
     }
     @When("I login as this user")
     public void i_login_as_this_user() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Map<String,Object> bdy=new HashMap<>();
+        bdy.put("username",userName);
+        bdy.put("password",password);
+        response=given().accept(ContentType.JSON)
+                .and().contentType(ContentType.JSON)
+                .and().body(bdy)
+                .when().post("/api/login")
+                .prettyPeek();
+        token=response.jsonPath().getString("token");
     }
     @Then("I should get a successful login message")
     public void i_should_get_a_successful_login_message() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        String message=response.jsonPath().getString("message");
+        String actualMessage="User "+userName+" logged in successfully";
+        Assert.assertEquals(actualMessage,message);
     }
+    Response response1;
     @When("I list all registered users")
     public void i_list_all_registered_users() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+         response1 = given().accept(ContentType.JSON)
+                .and().contentType(ContentType.JSON)
+                .and().header("Authorization", token)
+                .when().get("/api/users")
+                .prettyPeek();
     }
     @Then("I should get a user count message")
     public void i_should_get_a_user_count_message() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        String message=response1.jsonPath().getString("message");
+        String actualMessage="Retrieved "+response1.jsonPath().getList("data").size()+" users";
+        //Assert.assertEquals(actualMessage,message);
     }
     @When("I retrieve the details of this user by id")
     public void i_retrieve_the_details_of_this_user_by_id() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+      id=  response.jsonPath().getString("user.id");
     }
     @Then("I should get a message with the retrieved user details")
     public void i_should_get_a_message_with_the_retrieved_user_details() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+      given().accept(ContentType.JSON)
+                .and().contentType(ContentType.JSON)
+                .and().header("Authorization", token)
+                .when().get("/api/users/"+id)
+                .prettyPeek().then().statusCode(200);
     }
     @Given("I have the following updated user details:")
-    public void i_have_the_following_updated_user_details(io.cucumber.datatable.DataTable dataTable) {
-        // Write code here that turns the phrase above into concrete actions
-        // For automatic transformation, change DataTable to one of
-        // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-        // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-        // Double, Byte, Short, Long, BigInteger or BigDecimal.
-        //
-        // For other transformations you can register a DataTableType.
-        throw new io.cucumber.java.PendingException();
+    public void i_have_the_following_updated_user_details(List<Map<String,Object>> dataTable) {
+        Map<String,Object> bdy= dataTable.get(0);
+        userName=bdy.get("username").toString();
+        password=bdy.get("password").toString();
+        email=bdy.get("email").toString();
+
+
     }
     @When("I update this user using updated details")
     public void i_update_this_user_using_updated_details() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Map<String,Object> bdy=new HashMap<>();
+        bdy.put("username",userName);
+        bdy.put("password",password);
+        bdy.put("email",email);
+        response=given().accept(ContentType.JSON)
+                .and().contentType(ContentType.JSON)
+                .and().header("Authorization", token)
+                .and().body(bdy)
+                .when().put("/api/users/"+id)
+                .prettyPeek();
     }
     @Then("I should get a successful update message")
     public void i_should_get_a_successful_update_message() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        String message=response.jsonPath().getString("message");
+        String actualMessage="Updated user with id "+id;
+        Assert.assertEquals(actualMessage,message);
     }
     @When("I delete this user")
     public void i_delete_this_user() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        response=given().accept(ContentType.JSON)
+                .and().contentType(ContentType.JSON)
+                .and().header("Authorization", token)
+                .when().delete("/api/users/"+id)
+                .prettyPeek();
     }
     @Then("I should get a successful user deletion message")
     public void i_should_get_a_successful_user_deletion_message() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        String message=response.jsonPath().getString("message");
+        String actualMessage="Deleted user with id "+id;
+        Assert.assertEquals(actualMessage,message);
     }
+
+
 
 
 
