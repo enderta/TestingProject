@@ -1,5 +1,6 @@
 package com.example.testingproject.stepDef;
 
+import com.example.testingproject.utilities.ConfigurationReader;
 import io.cucumber.java.en.*;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -32,7 +33,7 @@ String id;
         response=given().accept(ContentType.JSON)
                 .and().contentType(ContentType.JSON)
                 .and().body(bdy)
-                .when().post("/api/register")
+                .when().post(ConfigurationReader.getProperty("post_register"))
                 .prettyPeek();
     }
     @Then("I should get a successful registration message")
@@ -49,8 +50,7 @@ String id;
         response=given().accept(ContentType.JSON)
                 .and().contentType(ContentType.JSON)
                 .and().body(bdy)
-                .when().post("/api/login")
-                .prettyPeek();
+                .when().post(ConfigurationReader.getProperty("post_login"));
         token=response.jsonPath().getString("token");
     }
     @Then("I should get a successful login message")
