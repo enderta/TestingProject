@@ -1,6 +1,6 @@
 Feature: API testing
 
-  @api
+
   Scenario Outline: Full circle CRUD test
     Given I register a new user with following details:
       | username   | email             | password |
@@ -28,4 +28,3 @@ Feature: API testing
     Examples:
       | username      | email                | password | new_username | new_password | new_email        |
       | testusers1w7 | test1wss3317yy2@gmail1.com | 123456   | et2y3       | 123456   | et337@gmail.com |
-     
