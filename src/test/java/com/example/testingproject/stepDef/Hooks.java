@@ -9,8 +9,7 @@ import io.cucumber.java.Before;
 
 import io.cucumber.java.Scenario;
 import io.restassured.RestAssured;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.*;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -39,6 +38,8 @@ public class Hooks {
         // we put a logic that should apply to every scenario
        Driver.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         // for example: setting up driver, maximizing browser, setting up implicit wait
+        Driver.getDriver().get(ConfigurationReader.getProperty("url"));
+
     }
 
     @Before("@api")
@@ -55,7 +56,9 @@ public class Hooks {
             final byte[] screenShot = ((TakesScreenshot) Driver.getDriver()).getScreenshotAs(OutputType.BYTES);
             scenario.attach(screenShot, "image/png", "screenshot");
         }
-
+        WebElement element = Driver.getDriver().findElement(By.xpath("//button[.='Logout']"));
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        js.executeScript("arguments[0].click();", element);
         Driver.getDriver().manage().deleteAllCookies();
         Driver.closeDriver();
 
