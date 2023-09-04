@@ -2,6 +2,7 @@ package com.example.testingproject.stepDef;
 
 
 
+import com.example.testingproject.utilities.BrowserUtils;
 import com.example.testingproject.utilities.ConfigurationReader;
 import com.example.testingproject.utilities.Driver;
 import io.cucumber.java.After;
@@ -14,7 +15,11 @@ import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.openqa.selenium.remote.Browser;
+import org.openqa.selenium.support.ui.Select;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -36,9 +41,12 @@ public class Hooks {
     @Before("@ui")
     public void setUp() {
         // we put a logic that should apply to every scenario
-       Driver.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+       BrowserUtils.waitFor(5);
+       Driver.getDriver().navigate().refresh();
         // for example: setting up driver, maximizing browser, setting up implicit wait
         Driver.getDriver().get(ConfigurationReader.getProperty("url"));
+
+
 
     }
 

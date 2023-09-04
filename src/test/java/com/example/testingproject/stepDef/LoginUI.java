@@ -1,5 +1,6 @@
 package com.example.testingproject.stepDef;
 
+import com.example.testingproject.utilities.BrowserUtils;
 import com.example.testingproject.utilities.ConfigurationReader;
 import com.example.testingproject.utilities.Driver;
 import io.cucumber.java.en.*;
@@ -17,6 +18,7 @@ public class LoginUI {
          Driver.getDriver().findElement(By.xpath("//input[@name='password']")).
                 sendKeys(ConfigurationReader.getProperty("password"));
        Driver.getDriver().findElement(By.xpath("//button[.='Login']")).click();
+        BrowserUtils.waitFor(5);
     }
     @Then("I should be logged in")
     public void i_should_be_logged_in() {

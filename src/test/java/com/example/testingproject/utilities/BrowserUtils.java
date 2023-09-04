@@ -6,6 +6,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -196,11 +197,7 @@ public class BrowserUtils {
      * @param seconds
      */
     public static void waitFor(int seconds) {
-        try {
-            Thread.sleep(seconds * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Driver.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
     }
 
     /**
