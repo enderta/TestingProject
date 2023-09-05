@@ -7,7 +7,7 @@ Feature: Adding new job to ui
   @ui @addJob
     Scenario Outline: Adding new job to ui
     When I click on the add job button
-    And I enter job details "<jobTitle>", "<jobCompany>", "<jobDescription>", "<jobLocation>",, "<jobRequirements>"
+    And I enter job details "<jobTitle>", "<jobCompany>", "<jobDescription>", "<jobLocation>", "<jobRequirements>"
     And I click on the submit button
     Then I should see the job added to the list
     Examples:

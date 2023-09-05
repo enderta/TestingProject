@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 public class BrowserUtils {
@@ -197,8 +198,13 @@ public class BrowserUtils {
      * @param seconds
      */
     public static void waitFor(int seconds) {
-        Driver.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
+        try {
+            TimeUnit.SECONDS.sleep(seconds);
+        } catch (InterruptedException exception) {
+            exception.printStackTrace();
+        }
     }
+
 
     /**
      * Waits for the provided element to be visible on the page
