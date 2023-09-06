@@ -44,7 +44,7 @@ public class Hooks {
        BrowserUtils.waitFor(5);
 
         // for example: setting up driver, maximizing browser, setting up implicit wait
-        Driver.getDriver().get(ConfigurationReader.getProperty("base_url_localUI"));
+        Driver.getDriver().get(ConfigurationReader.getProperty("url"));
 
         Driver.getDriver().navigate().refresh();
 
