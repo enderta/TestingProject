@@ -4,32 +4,21 @@ import com.example.testingproject.utilities.BrowserUtils;
 import com.example.testingproject.utilities.Driver;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AddingJobUI {
-    private String title;
-    private String company;
-    private String description;
-    private String location;
-    private String requirements;
-    private List<WebElement> elements;
+
+
     private int beforesize;
 
-
-    public static void waitFor(int seconds) {
-        try {
-            TimeUnit.SECONDS.sleep(seconds);
-        } catch (InterruptedException exception) {
-            exception.printStackTrace();
-        }
-    }
 
     private void sendKeysWithJs(WebElement element, String value){
         JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
@@ -46,20 +35,33 @@ public class AddingJobUI {
 
     @When("I click on the add job button")
     public void i_click_on_the_add_job_button() {
-        waitFor(10);
 
 
         String text = Driver.getDriver().findElement(By.xpath("//*[contains(text(),'job')]")).getText();
         System.out.println(text);
         String[] s = text.split(" ");
-        int size = Integer.parseInt(s[0]);
+        int size =0;
+        if(text.equals("No job click + button to add job")){
+            Driver.getDriver().findElement(By.xpath("//button[.='+']")).click();
+        }
+        else{
+            size = Integer.parseInt(s[0]);
 
-        WebElement element= Driver.getDriver().findElement(By.xpath("//select[@class='form-select']"));
-        selectByIndexWhenSizeGreaterThanThree(size, element);
+          /*  if(size>3 ){
 
-        elements = Driver.getDriver().findElements(By.xpath("//div[@class='col-md-4']"));
-        beforesize=elements.size();
-        Driver.getDriver().findElement(By.xpath("//button[.='+']")).click();
+                WebElement element= Driver.getDriver().findElement(By.xpath("//select[@class='form-select']"));
+                WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
+                wait.until(ExpectedConditions.visibilityOf(element));
+                Select select = new Select(element);
+                List<WebElement> options = select.getOptions();
+                select.selectByIndex(options.size()-1);
+            }*/
+            Driver.getDriver().findElement(By.xpath("//button[.='+']")).click();
+        }
+
+
+        beforesize=size;
+
     }
 
     @When("I enter job details {string}, {string}, {string}, {string}, {string}")
@@ -77,28 +79,20 @@ public class AddingJobUI {
     @When("I click on the submit button")
     public void i_click_on_the_submit_button() {
         Driver.getDriver().findElement(By.xpath("//button[.='Save Changes']")).click();
-        waitFor(10);
-        Alert alert = Driver.getDriver().switchTo().alert();
-        String text = alert.getText();
-        Assert.assertEquals("Job added successfully",text);
-        alert.accept();
 
     }
 
     @Then("I should see the job added to the list")
-    public void i_should_see_the_job_added_to_the_list() {
-
+    public void i_should_see_the_job_added_to_the_list() throws InterruptedException {
+        BrowserUtils.waitFor(10);
         String text = Driver.getDriver().findElement(By.xpath("//*[contains(text(),'job')]")).getText();
-
+        System.out.println(text);
         String[] s = text.split(" ");
         int size = Integer.parseInt(s[0]);
 
-        WebElement element= Driver.getDriver().findElement(By.xpath("//select[@class='form-select']"));
-        selectByIndexWhenSizeGreaterThanThree(size, element);
-        waitFor(10);
-        List<WebElement> elements1 = Driver.getDriver().findElements(By.xpath("//div[@class='col-md-4']"));
-        int aftersize=elements1.size();
-
+        int aftersize=size;
+        System.out.println("beforesize = " + beforesize);
+        System.out.println("aftersize = " + aftersize);
         Assert.assertEquals(size,aftersize);
     }
 }

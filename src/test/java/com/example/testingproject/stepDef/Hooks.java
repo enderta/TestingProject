@@ -42,11 +42,11 @@ public class Hooks {
     public void setUp() {
         // we put a logic that should apply to every scenario
        BrowserUtils.waitFor(5);
-       Driver.getDriver().navigate().refresh();
+
         // for example: setting up driver, maximizing browser, setting up implicit wait
-        Driver.getDriver().get(ConfigurationReader.getProperty("url"));
+        Driver.getDriver().get(ConfigurationReader.getProperty("base_url_localUI"));
 
-
+        Driver.getDriver().navigate().refresh();
 
     }
 
@@ -67,7 +67,6 @@ public class Hooks {
         WebElement element = Driver.getDriver().findElement(By.xpath("//button[.='Logout']"));
         JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
         js.executeScript("arguments[0].click();", element);
-        Driver.getDriver().manage().deleteAllCookies();
         Driver.closeDriver();
 
 
