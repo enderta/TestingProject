@@ -71,9 +71,9 @@ public class AddingJobUI {
         Driver.getDriver().findElement(By.name("location")).sendKeys(location);
         WebElement element = Driver.getDriver().findElement(By.name("requirements"));
         WebElement element1 = Driver.getDriver().findElement(By.name("description"));
-
-        sendKeysWithJs(element1, description);
         sendKeysWithJs(element, requirements);
+        sendKeysWithJs(element1, description);
+
     }
 
     @When("I click on the submit button")

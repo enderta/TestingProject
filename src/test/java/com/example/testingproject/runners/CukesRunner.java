@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
         glue = {"com/example/testingproject/stepDef"},
         features = {"src/test/resources/features"},
         dryRun = false,
-        tags = "@delete"
+        tags = "@edit"
 )
 public class CukesRunner {
 }
