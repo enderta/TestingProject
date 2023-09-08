@@ -57,4 +57,4 @@ This is a comprehensive Java-based testing project which uses several technologi
     password=<your_password>
     ```
 
-* Please replace contact me for data to run this project
+* Please contact me for data to run this project
